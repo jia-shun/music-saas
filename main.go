@@ -1,12 +1,17 @@
 package main
 
 import (
-	"saas/orm"
-	"saas/router"
+	"music/core"
+	"music/global"
+	"music/initialize"
 )
 
-func main()  {
-	orm.InitDatabase()
-	engine := router.Router()
-	_ = engine.Run()
+func main() {
+	global.VIPER = core.Viper()
+	global.LOG = core.Zap()
+	global.DB = initialize.Gorm()
+	initialize.MysqlTables(global.DB)
+	db, _ := global.DB.DB()
+	defer db.Close()
+	core.RunServer()
 }

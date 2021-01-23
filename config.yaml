@@ -1,0 +1,42 @@
+# Global Config
+
+#system
+system:
+  env: 'public'
+  addr: 8888
+  use-cache: false
+
+#jwt
+jwt:
+  sigining-key: 'bXVzaWMNCg'
+  expires-time: 684800
+  buffer-time: 86400
+
+#mysql
+mysql:
+  path: '127.0.0.1:3306'
+  config: 'charset=utf8mb4&parseTime=True&loc=Local'
+  db-name: 'cool_music'
+  username: 'root'
+  password: 'mysqladmin'
+  max-idle-conns: 10
+  max-open-conns: 100
+  log-mode: false
+  log-zap: ''
+
+# redis
+redis:
+  db: 0
+  addr: '127.0.0.1:6379'
+  password: ''
+
+# zap logger configuration
+zap:
+  level: 'info'
+  format: 'console'
+  prefix: '[COOL-MUSIC]'
+  director: 'log'
+  show-line: true
+  encode-level: 'LowercaseColorLevelEncoder'
+  stacktrace-key: 'stacktrace'
+  log-in-console: true
