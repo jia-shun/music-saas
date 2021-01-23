@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"github.com/fvbock/endless"
 	"github.com/gin-gonic/gin"
-	"music/global"
-	"music/initialize"
+	"music-saas/global"
+	"music-saas/initialize"
 	"strconv"
 	"time"
 )

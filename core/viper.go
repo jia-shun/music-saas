@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
-	"music/global"
-	"music/utils"
+	"music-saas/global"
+	"music-saas/utils"
 	"os"
 )
 

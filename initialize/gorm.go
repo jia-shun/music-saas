@@ -5,8 +5,8 @@ import (
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
-	"music/global"
-	"music/model"
+	"music-saas/global"
+	"music-saas/model"
 	"os"
 )
 

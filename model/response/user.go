@@ -1,7 +1,7 @@
 package response
 
 import (
-	"music/model"
+	"music-saas/model"
 )
 
 type SysUserResponse struct {

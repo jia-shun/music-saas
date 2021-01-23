@@ -1,9 +1,9 @@
 package main
 
 import (
-	"music/core"
-	"music/global"
-	"music/initialize"
+	"music-saas/core"
+	"music-saas/global"
+	"music-saas/initialize"
 )
 
 func main() {

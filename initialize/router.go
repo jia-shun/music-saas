@@ -2,9 +2,9 @@ package initialize
 
 import (
 	"github.com/gin-gonic/gin"
-	"music/global"
-	"music/middleware"
-	"music/router"
+	"music-saas/global"
+	"music-saas/middleware"
+	"music-saas/router"
 )
 
 func Routers() *gin.Engine {

@@ -5,7 +5,7 @@ import (
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
-	"music/config"
+	"music-saas/config"
 )
 
 var (

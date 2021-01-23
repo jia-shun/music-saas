@@ -1,8 +1,8 @@
 package service
 
 import (
-	"music/global"
-	"music/model"
+	"music-saas/global"
+	"music-saas/model"
 )
 
 //@function: FindUserById

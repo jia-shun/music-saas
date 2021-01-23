@@ -2,7 +2,7 @@ package utils
 
 import (
 	"go.uber.org/zap"
-	"music/global"
+	"music-saas/global"
 	"os"
 )
 

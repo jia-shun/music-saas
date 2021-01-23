@@ -5,7 +5,7 @@ package utils
 import (
 	zaprotatelogs "github.com/lestrrat-go/file-rotatelogs"
 	"go.uber.org/zap/zapcore"
-	"music/global"
+	"music-saas/global"
 	"os"
 	"path"
 	"time"

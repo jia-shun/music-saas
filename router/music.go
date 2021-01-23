@@ -2,7 +2,7 @@ package router
 
 import (
 	"github.com/gin-gonic/gin"
-	"music/api"
+	"music-saas/api"
 )
 
 func InitMusicRouter(Router *gin.RouterGroup) {

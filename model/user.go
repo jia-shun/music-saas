@@ -1,7 +1,7 @@
 package model
 
 import (
-	"music/global"
+	"music-saas/global"
 )
 
 type User struct {

@@ -3,7 +3,7 @@ package initialize
 import (
 	"github.com/go-redis/redis"
 	"go.uber.org/zap"
-	"music/global"
+	"music-saas/global"
 )
 
 func Redis() {
