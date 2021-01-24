@@ -7,48 +7,47 @@ import (
 
 type Response struct {
 	Code    int         `json:"code"`
-	Data    interface{} `json:"data"`
 	Message string      `json:"message"`
+	Data    interface{} `json:"data"`
 }
 
-const (
-	ERROR   = 500
-	SUCCESS = 200
-)
-
-func Result(code int, data interface{}, msg string, c *gin.Context) {
+func Result(code int, msg string, data interface{}, c *gin.Context) {
 	// 开始时间
-	c.JSON(http.StatusOK, Response{
+	c.JSON(code, Response{
 		code,
-		data,
 		msg,
+		data,
 	})
 }
 
 func Ok(c *gin.Context) {
-	Result(SUCCESS, map[string]interface{}{}, "操作成功", c)
+	Result(http.StatusOK, "操作成功", map[string]interface{}{}, c)
 }
 
 func OkWithMessage(message string, c *gin.Context) {
-	Result(SUCCESS, map[string]interface{}{}, message, c)
+	Result(http.StatusOK, message, map[string]interface{}{}, c)
 }
 
 func OkWithData(data interface{}, c *gin.Context) {
-	Result(SUCCESS, data, "操作成功", c)
+	Result(http.StatusOK, "操作成功", data, c)
 }
 
-func OkWithDetailed(data interface{}, message string, c *gin.Context) {
-	Result(SUCCESS, data, message, c)
+func OkWithDetailed(message string, data interface{}, c *gin.Context) {
+	Result(http.StatusOK, message, data, c)
 }
 
 func Fail(c *gin.Context) {
-	Result(ERROR, map[string]interface{}{}, "操作失败", c)
+	Result(http.StatusInternalServerError, "操作失败", map[string]interface{}{}, c)
 }
 
 func FailWithMessage(message string, c *gin.Context) {
-	Result(ERROR, map[string]interface{}{}, message, c)
+	Result(http.StatusInternalServerError, message, map[string]interface{}{}, c)
 }
 
-func FailWithDetailed(data interface{}, message string, c *gin.Context) {
-	Result(ERROR, data, message, c)
+func FailWithData(message string, data interface{}, c *gin.Context) {
+	Result(http.StatusInternalServerError, message, data, c)
+}
+
+func FailWithDetailed(code int, message string, data interface{}, c *gin.Context) {
+	Result(code, message, data, c)
 }

@@ -11,6 +11,7 @@ import (
 	"music-saas/model/response"
 	"music-saas/service"
 	"music-saas/utils"
+	"net/http"
 	"time"
 )
 
@@ -23,7 +24,7 @@ func Login(ctx *gin.Context) {
 	}
 	U := model.User{Username: R.Username, Password: R.Password}
 	if user, err := service.Login(U); err != nil {
-		errMsg := "login failed: The username does not exist or the password is incorrect"
+		errMsg := "Login failed: The username does not exist or the password is incorrect"
 		global.LOG.Error(errMsg)
 		response.FailWithMessage(errMsg, ctx)
 	} else {
@@ -45,15 +46,15 @@ func issueToken(user model.User, ctx *gin.Context) {
 	}
 	token, err := j.CreateToken(claims)
 	if err != nil {
-		global.LOG.Error("get token failed", zap.Any("err", err))
-		response.FailWithMessage("get token failed", ctx)
+		global.LOG.Error("Get token failed", zap.Any("err", err))
+		response.FailWithMessage("Get token failed", ctx)
 		return
 	}
-	response.OkWithDetailed(response.LoginResponse{
+	response.OkWithDetailed("Login success", response.LoginResponse{
 		User:      user,
 		Token:     token,
 		ExpiresAt: claims.StandardClaims.ExpiresAt * 1000,
-	}, "login success", ctx)
+	}, ctx)
 	return
 }
 
@@ -68,10 +69,10 @@ func Register(ctx *gin.Context) {
 		Email: R.Email, Sex: R.Sex, Age: R.Age, Status: true}
 	err, userReturn := service.Register(*u)
 	if err != nil {
-		global.LOG.Error("register failed", zap.Any("err", err))
-		response.FailWithDetailed(response.SysUserResponse{User: userReturn}, "register failed", ctx)
+		global.LOG.Error("Register failed", zap.Any("err", err))
+		response.FailWithDetailed(http.StatusBadRequest, "Register failed: "+err.Error(), response.SysUserResponse{User: userReturn}, ctx)
 	} else {
-		response.OkWithDetailed(response.SysUserResponse{User: userReturn}, "register success", ctx)
+		response.OkWithDetailed("Register success", response.SysUserResponse{User: userReturn}, ctx)
 	}
 	return
 }

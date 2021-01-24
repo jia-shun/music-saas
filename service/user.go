@@ -11,7 +11,7 @@ import (
 func Register(u model.User) (err error, user model.User) {
 	var userModel model.User
 	if !errors.Is(global.DB.Where("username = ?", u.Username).First(&userModel).Error, gorm.ErrRecordNotFound) {
-		return errors.New(""), user
+		return errors.New("the username already exists"), user
 	}
 	u.Password = utils.Md5Encode([]byte(u.Password))
 	err = global.DB.Create(&u).Error
