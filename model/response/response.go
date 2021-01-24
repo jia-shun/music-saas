@@ -8,12 +8,12 @@ import (
 type Response struct {
 	Code    int         `json:"code"`
 	Data    interface{} `json:"data"`
-	Message string      `json:"msg"`
+	Message string      `json:"message"`
 }
 
 const (
-	ERROR   = 7
-	SUCCESS = 0
+	ERROR   = 500
+	SUCCESS = 200
 )
 
 func Result(code int, data interface{}, msg string, c *gin.Context) {

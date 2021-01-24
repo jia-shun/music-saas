@@ -40,7 +40,10 @@ func GormMysql() *gorm.DB {
 }
 
 func MysqlTables(db *gorm.DB) {
-	err := db.AutoMigrate(model.User{})
+	err := db.AutoMigrate(
+		model.User{},
+		model.MusicProduction{},
+	)
 	if err != nil {
 		global.LOG.Error("register table failed", zap.Any("err", err))
 		os.Exit(0)

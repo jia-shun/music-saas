@@ -1,11 +1,77 @@
 package api
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/dgrijalva/jwt-go"
+	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
+	"music-saas/global"
+	"music-saas/middleware"
+	"music-saas/model"
+	"music-saas/model/request"
+	"music-saas/model/response"
+	"music-saas/service"
+	"music-saas/utils"
+	"time"
+)
 
 func Login(ctx *gin.Context) {
+	var R request.Login
+	_ = ctx.ShouldBindJSON(&R)
+	if err := utils.Verify(R, utils.LoginVerify); err != nil {
+		response.FailWithMessage(err.Error(), ctx)
+		return
+	}
+	U := model.User{Username: R.Username, Password: R.Password}
+	if user, err := service.Login(U); err != nil {
+		errMsg := "login failed: The username does not exist or the password is incorrect"
+		global.LOG.Error(errMsg)
+		response.FailWithMessage(errMsg, ctx)
+	} else {
+		issueToken(user, ctx)
+	}
+}
 
+func issueToken(user model.User, ctx *gin.Context) {
+	j := middleware.JWT{SigningKey: []byte(global.CONFIG.JWT.SigningKey)}
+	claims := request.CustomClaims{
+		ID:         user.ID,
+		Username:   user.Username,
+		BufferTime: global.CONFIG.JWT.BufferTime,
+		StandardClaims: jwt.StandardClaims{
+			NotBefore: time.Now().Unix() - 1000,
+			ExpiresAt: time.Now().Unix() + global.CONFIG.JWT.ExpiresTime,
+			Issuer:    "coolMusic",
+		},
+	}
+	token, err := j.CreateToken(claims)
+	if err != nil {
+		global.LOG.Error("get token failed", zap.Any("err", err))
+		response.FailWithMessage("get token failed", ctx)
+		return
+	}
+	response.OkWithDetailed(response.LoginResponse{
+		User:      user,
+		Token:     token,
+		ExpiresAt: claims.StandardClaims.ExpiresAt * 1000,
+	}, "login success", ctx)
+	return
 }
 
 func Register(ctx *gin.Context) {
-
+	var R request.Register
+	_ = ctx.ShouldBindJSON(&R)
+	if err := utils.Verify(R, utils.RegisterVerify); err != nil {
+		response.FailWithMessage(err.Error(), ctx)
+		return
+	}
+	u := &model.User{Username: R.Username, NickName: R.NickName, Password: R.Password, Avatar: R.Avatar, Phone: R.Phone,
+		Email: R.Email, Sex: R.Sex, Age: R.Age, Status: true}
+	err, userReturn := service.Register(*u)
+	if err != nil {
+		global.LOG.Error("register failed", zap.Any("err", err))
+		response.FailWithDetailed(response.SysUserResponse{User: userReturn}, "register failed", ctx)
+	} else {
+		response.OkWithDetailed(response.SysUserResponse{User: userReturn}, "register success", ctx)
+	}
+	return
 }

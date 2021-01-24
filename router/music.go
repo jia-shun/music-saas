@@ -6,11 +6,11 @@ import (
 )
 
 func InitMusicRouter(Router *gin.RouterGroup) {
-	UserRouter := Router.Group("song")
+	MusicProductionRouter := Router.Group("music")
 	{
-		UserRouter.POST("list", api.SongList)       // 音乐任务列表
-		UserRouter.POST("create", api.CreateSong)   // 增加音乐任务
-		UserRouter.POST("update", api.UpdateSong)   // 编辑音乐任务
-		UserRouter.DELETE("delete", api.DeleteSong) // 删除音乐任务
+		MusicProductionRouter.POST("production/list", api.MusicProductionList)       // 音乐任务列表
+		MusicProductionRouter.POST("production/create", api.CreateMusicProduction)   // 增加音乐任务
+		MusicProductionRouter.POST("production/update", api.UpdateMusicProduction)   // 编辑音乐任务
+		MusicProductionRouter.DELETE("production/delete", api.DeleteMusicProduction) // 删除音乐任务
 	}
 }

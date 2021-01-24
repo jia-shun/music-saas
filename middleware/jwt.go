@@ -35,7 +35,7 @@ func JWTAuth() gin.HandlerFunc {
 			return
 		}
 		id, _ := strconv.Atoi(claims.Id)
-		if err, _ = service.FindUserById(id); err != nil {
+		if _, err = service.FindUserById(id); err != nil {
 			response.FailWithDetailed(gin.H{"reload": true}, err.Error(), c)
 			c.Abort()
 		}
