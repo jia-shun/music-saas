@@ -26,7 +26,7 @@ func Login(ctx *gin.Context) {
 	if user, err := service.Login(U); err != nil {
 		errMsg := "Login failed: The username does not exist or the password is incorrect"
 		global.LOG.Error(errMsg)
-		response.FailWithMessage(errMsg, ctx)
+		response.FailWithDetailed(http.StatusBadRequest, errMsg, user, ctx)
 	} else {
 		issueToken(user, ctx)
 	}
