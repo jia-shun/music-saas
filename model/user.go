@@ -6,7 +6,7 @@ import (
 
 type User struct {
 	global.MODEL
-	Username string `json:"userName" gorm:"not null;type:varchar(50);unique_index;comment:用户登录名"`
+	Username string `json:"username" gorm:"not null;type:varchar(50);unique_index;comment:用户登录名"`
 	Password string `json:"-"  gorm:"not null;comment:用户登录密码"`
 	NickName string `json:"nickName" gorm:"comment:用户昵称" `
 	Avatar   string `json:"avatar" gorm:"default:https://cool-music-1257890402.cos.ap-nanjing.myqcloud.com/avatar/avatar.jpeg;comment:用户头像"`
