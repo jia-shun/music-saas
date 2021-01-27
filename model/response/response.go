@@ -21,7 +21,7 @@ func Result(code int, msg string, data interface{}, c *gin.Context) {
 }
 
 func Ok(c *gin.Context) {
-	Result(http.StatusOK, "操作成功", map[string]interface{}{}, c)
+	Result(http.StatusOK, "OK", map[string]interface{}{}, c)
 }
 
 func OkWithMessage(message string, c *gin.Context) {
@@ -29,7 +29,7 @@ func OkWithMessage(message string, c *gin.Context) {
 }
 
 func OkWithData(data interface{}, c *gin.Context) {
-	Result(http.StatusOK, "操作成功", data, c)
+	Result(http.StatusOK, "OK", data, c)
 }
 
 func OkWithDetailed(message string, data interface{}, c *gin.Context) {
@@ -37,11 +37,15 @@ func OkWithDetailed(message string, data interface{}, c *gin.Context) {
 }
 
 func Fail(c *gin.Context) {
-	Result(http.StatusInternalServerError, "操作失败", map[string]interface{}{}, c)
+	Result(http.StatusInternalServerError, "SERVER ERROR", map[string]interface{}{}, c)
 }
 
 func FailWithMessage(message string, c *gin.Context) {
 	Result(http.StatusInternalServerError, message, map[string]interface{}{}, c)
+}
+
+func FailWithCode(code int, message string, c *gin.Context) {
+	Result(code, message, map[string]interface{}{}, c)
 }
 
 func FailWithData(message string, data interface{}, c *gin.Context) {

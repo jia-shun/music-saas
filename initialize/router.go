@@ -20,6 +20,7 @@ func Routers() *gin.Engine {
 	PrivateGroup := Router.Group("")
 	PrivateGroup.Use(middleware.JWTAuth())
 	{
+		router.InitUserRouter(PrivateGroup)
 		router.InitMusicRouter(PrivateGroup)
 	}
 	global.LOG.Info("router register success")
