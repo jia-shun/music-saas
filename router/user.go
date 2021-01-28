@@ -8,7 +8,7 @@ import (
 func InitUserRouter(Router *gin.RouterGroup) (R gin.IRouter) {
 	BaseRouter := Router.Group("user")
 	{
-		BaseRouter.POST("info", api.GetInfo)
+		BaseRouter.GET("info", api.GetInfo)
 		BaseRouter.POST("logout", api.Logout)
 	}
 	return BaseRouter
