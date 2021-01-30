@@ -30,7 +30,6 @@ func Login(u model.User) (user model.User, err error) {
 //@param: id uint
 //@return: err error, user *model.SysUser
 func FindUserById(id uint) (user model.User, err error) {
-	var u model.User
-	err = global.DB.Where("`id` = ?", id).First(&u).Error
-	return u, err
+	err = global.DB.Where("`id` = ?", id).First(&user).Error
+	return user, err
 }

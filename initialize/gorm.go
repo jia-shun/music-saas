@@ -42,7 +42,7 @@ func GormMysql() *gorm.DB {
 func MysqlTables(db *gorm.DB) {
 	err := db.AutoMigrate(
 		model.User{},
-		model.MusicProduction{},
+		model.Music{},
 	)
 	if err != nil {
 		global.LOG.Error("register table failed", zap.Any("err", err))

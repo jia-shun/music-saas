@@ -15,9 +15,4 @@ type IdsReq struct {
 	Ids []int `json:"ids" form:"ids"`
 }
 
-// Get role by id structure
-type GetAuthorityId struct {
-	AuthorityId string
-}
-
 type Empty struct{}
