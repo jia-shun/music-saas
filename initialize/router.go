@@ -18,7 +18,7 @@ func Routers() *gin.Engine {
 		router.InitBaseRouter(PublicGroup)
 	}
 	PrivateGroup := Router.Group("")
-	//PrivateGroup.Use(middleware.JWTAuth())
+	PrivateGroup.Use(middleware.JWTAuth())
 	{
 		router.InitUserRouter(PrivateGroup)
 		router.InitMusicRouter(PrivateGroup)

@@ -13,12 +13,18 @@ import (
 
 func GetMusic(ctx *gin.Context) {
 	var pageInfo request.SearchMusicParams
+	if pageInfo.Page == 0 {
+		pageInfo.Page = 1
+	}
+	if pageInfo.PageSize == 0 {
+		pageInfo.PageSize = 20
+	}
 	_ = ctx.ShouldBindJSON(&pageInfo)
 	if err := utils.Verify(pageInfo.PageInfo, utils.PageInfoVerify); err != nil {
 		response.FailWithMessage(err.Error(), ctx)
 		return
 	}
-	if list, total, err := service.GetMusicList(pageInfo.Keyword, pageInfo.PageInfo, pageInfo.OrderKey, pageInfo.Desc); err != nil {
+	if list, total, err := service.GetMusicList(pageInfo.PageInfo, pageInfo.Keyword, pageInfo.OrderKey, pageInfo.Desc); err != nil {
 		global.LOG.Error("获取音乐列表失败", zap.Any("err", err))
 		response.FailWithMessage("获取音乐列表失败", ctx)
 	} else {

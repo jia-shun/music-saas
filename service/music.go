@@ -6,14 +6,13 @@ import (
 	"music-saas/model/request"
 )
 
-func GetMusicList(keyword string, info request.PageInfo, order string, desc bool) (list interface{}, total int64, err error) {
+func GetMusicList(info request.PageInfo, keyword string, order string, desc bool) (list interface{}, total int64, err error) {
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
 	db := global.DB.Model(&model.Music{})
 	var musicList []model.Music
 	if keyword != "" {
-		db = db.Where("song_name LIKE ?", "%"+keyword+"%")
-		db = db.Where("customer_name LIKE ?", "%"+keyword+"%")
+		db = db.Where("song_name LIKE ?", "%"+keyword+"%").Or("customer_name LIKE ?", "%"+keyword+"%")
 	}
 	err = db.Count(&total).Error
 	if err != nil {
