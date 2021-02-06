@@ -7,8 +7,8 @@ import (
 
 type Music struct {
 	global.MODEL
-	UserID       int       `json:"userId" gorm:"not null;index:idx_uid;comment:用户id"`
-	SongName     string    `json:"songName" gorm:"not null;comment:歌曲名字"`
+	UserID       uint      `json:"userId" gorm:"not null;index:idx_uid;comment:用户id"`
+	MusicName    string    `json:"musicName" gorm:"not null;comment:音乐名称"`
 	CustomerName string    `json:"customerName" gorm:"not null;comment:客户名字"`
 	Price        float64   `json:"price" gorm:"not null;type:decimal(10,2);comment:歌曲制作费用"`
 	BeganAt      time.Time `json:"beganAt" gorm:"comment:接手时间"`

@@ -5,4 +5,5 @@ type SearchMusicParams struct {
 	Keyword  string `json:"keyword"`
 	OrderKey string `json:"orderKey"`
 	Desc     bool   `json:"desc"`
+	UserId   uint   `json:"userId"`
 }
