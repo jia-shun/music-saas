@@ -10,6 +10,7 @@ import (
 	"music-saas/model/transfer"
 	"music-saas/service"
 	"music-saas/utils"
+	"strconv"
 )
 
 func GetMusic(ctx *gin.Context) {
@@ -50,13 +51,9 @@ func GetMusic(ctx *gin.Context) {
 }
 
 func GetMusicById(ctx *gin.Context) {
-	var music model.Music
-	_ = ctx.ShouldBindJSON(&music)
-	if err := utils.Verify(music.MODEL, utils.IdVerify); err != nil {
-		response.FailWithMessage(err.Error(), ctx)
-		return
-	}
-	music, err := service.FindMusicById(music.ID)
+	musicId := ctx.Param("id")
+	mId, _ := strconv.Atoi(musicId)
+	music, err := service.FindMusicById(uint(mId))
 	if err != nil {
 		global.LOG.Error("获取音乐失败", zap.Any("err", err))
 		response.FailWithMessage("获取音乐失败", ctx)
