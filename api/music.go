@@ -139,6 +139,16 @@ func UpdateMusicStatus(ctx *gin.Context) {
 func DeleteMusic(ctx *gin.Context) {
 	var music model.Music
 	_ = ctx.ShouldBindJSON(&music)
+	userId, exists := ctx.Get("userId")
+	if !exists {
+		global.LOG.Error("get user id from context failed")
+		response.FailWithMessage("the user not exist", ctx)
+		return
+	}
+	music.UserID = userId.(uint)
+	musicId := ctx.Param("id")
+	mId, _ := strconv.Atoi(musicId)
+	music.ID = uint(mId)
 	if err := utils.Verify(music.MODEL, utils.IdVerify); err != nil {
 		response.FailWithMessage(err.Error(), ctx)
 		return

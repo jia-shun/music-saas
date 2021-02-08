@@ -78,5 +78,12 @@ func UpdateMusicStatus(music model.Music) (err error) {
 }
 
 func DeleteMusic(music model.Music) (err error) {
-	return global.DB.Delete(&music).Error
+	oldMusic, err := FindMusicById(music.ID)
+	if err != nil {
+		return err
+	}
+	if oldMusic.UserID != music.UserID {
+		return errors.New("没有权限删除这首音乐")
+	}
+	return global.DB.Delete(&oldMusic).Error
 }
