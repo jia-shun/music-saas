@@ -2,11 +2,9 @@ package service
 
 import (
 	"errors"
-	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"music-saas/global"
 	"music-saas/model"
-	"music-saas/model/request"
 	"music-saas/utils"
 )
 
@@ -34,14 +32,4 @@ func Login(u model.User) (user model.User, err error) {
 func FindUserById(id uint) (user model.User, err error) {
 	err = global.DB.Where("`id` = ?", id).First(&user).Error
 	return user, err
-}
-
-func FindUserByToken(ctx *gin.Context) (user model.User, err error) {
-	if claims, exists := ctx.Get("claims"); !exists {
-		global.LOG.Error("get user id from context failed")
-		return user, errors.New("the user not exist")
-	} else {
-		user := claims.(*request.CustomClaims)
-		return FindUserById(user.ID)
-	}
 }

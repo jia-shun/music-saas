@@ -15,9 +15,10 @@ import (
 
 func GetMusic(ctx *gin.Context) {
 	var pageInfo request.SearchMusicParams
-	user, err := service.FindUserByToken(ctx)
-	if err != nil {
-		response.FailWithMessage(err.Error(), ctx)
+	userId, exists := ctx.Get("userId")
+	if !exists {
+		global.LOG.Error("get user id from context failed")
+		response.FailWithMessage("the user not exist", ctx)
 		return
 	}
 	if pageInfo.Page == 0 {
@@ -31,7 +32,7 @@ func GetMusic(ctx *gin.Context) {
 		response.FailWithMessage(err.Error(), ctx)
 		return
 	}
-	if list, total, err := service.GetMusicList(pageInfo.PageInfo, pageInfo.Keyword, pageInfo.OrderKey, pageInfo.Desc, user.ID); err != nil {
+	if list, total, err := service.GetMusicList(pageInfo.PageInfo, pageInfo.Keyword, pageInfo.OrderKey, pageInfo.Desc, userId.(uint)); err != nil {
 		global.LOG.Error("获取音乐列表失败", zap.Any("err", err))
 		response.FailWithMessage("获取音乐列表失败", ctx)
 	} else {
@@ -65,12 +66,13 @@ func GetMusicById(ctx *gin.Context) {
 func CreateMusic(ctx *gin.Context) {
 	var musicInfo transfer.MusicInfo
 	_ = ctx.ShouldBindJSON(&musicInfo)
-	user, err := service.FindUserByToken(ctx)
-	if err != nil {
-		response.FailWithMessage(err.Error(), ctx)
+	userId, exists := ctx.Get("userId")
+	if !exists {
+		global.LOG.Error("get user id from context failed")
+		response.FailWithMessage("the user not exist", ctx)
 		return
 	}
-	musicInfo.UserID = user.ID
+	musicInfo.UserID = userId.(uint)
 	if err := utils.Verify(musicInfo, utils.MusicVerify); err != nil {
 		response.FailWithMessage(err.Error(), ctx)
 		return
@@ -91,12 +93,13 @@ func UpdateMusic(ctx *gin.Context) {
 		response.FailWithMessage(err.Error(), ctx)
 		return
 	}
-	user, err := service.FindUserByToken(ctx)
-	if err != nil {
-		response.FailWithMessage(err.Error(), ctx)
+	userId, exists := ctx.Get("userId")
+	if !exists {
+		global.LOG.Error("get user id from context failed")
+		response.FailWithMessage("the user not exist", ctx)
 		return
 	}
-	musicInfo.UserID = user.ID
+	musicInfo.UserID = userId.(uint)
 	if err := utils.Verify(musicInfo, utils.MusicVerify); err != nil {
 		response.FailWithMessage(err.Error(), ctx)
 		return
@@ -117,12 +120,13 @@ func UpdateMusicStatus(ctx *gin.Context) {
 		response.FailWithMessage(err.Error(), ctx)
 		return
 	}
-	user, err := service.FindUserByToken(ctx)
-	if err != nil {
-		response.FailWithMessage(err.Error(), ctx)
+	userId, exists := ctx.Get("userId")
+	if !exists {
+		global.LOG.Error("get user id from context failed")
+		response.FailWithMessage("the user not exist", ctx)
 		return
 	}
-	musicInfo.UserID = user.ID
+	musicInfo.UserID = userId.(uint)
 	var music = utils.TransferToMusic(musicInfo)
 	if err := service.UpdateMusicStatus(music); err != nil {
 		global.LOG.Error("编辑音乐完成状态失败", zap.Any("err", err))

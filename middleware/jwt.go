@@ -14,12 +14,12 @@ import (
 )
 
 func JWTAuth() gin.HandlerFunc {
-	return func(c *gin.Context) {
+	return func(ctx *gin.Context) {
 		// 我们这里jwt鉴权取头部信息 x-token 登录时回返回token信息 这里前端需要把token存储到cookie或者本地localStorage中 不过需要跟后端协商过期时间 可以约定刷新令牌或者重新登录
-		token := c.Request.Header.Get("X-Token")
+		token := ctx.Request.Header.Get("X-Token")
 		if token == "" {
-			response.FailWithDetailed(http.StatusBadRequest, "Not logged in or illegal login", gin.H{"reload": true}, c)
-			c.Abort()
+			response.FailWithDetailed(http.StatusBadRequest, "Not logged in or illegal login", gin.H{"reload": true}, ctx)
+			ctx.Abort()
 			return
 		}
 		j := NewJWT()
@@ -27,27 +27,28 @@ func JWTAuth() gin.HandlerFunc {
 		claims, err := j.ParseToken(token)
 		if err != nil {
 			if err == TokenExpired {
-				response.FailWithDetailed(http.StatusUnauthorized, "Authorization expired", gin.H{"reload": true}, c)
-				c.Abort()
+				response.FailWithDetailed(http.StatusUnauthorized, "Authorization expired", gin.H{"reload": true}, ctx)
+				ctx.Abort()
 				return
 			}
-			response.FailWithDetailed(http.StatusUnauthorized, err.Error(), gin.H{"reload": true}, c)
-			c.Abort()
+			response.FailWithDetailed(http.StatusUnauthorized, err.Error(), gin.H{"reload": true}, ctx)
+			ctx.Abort()
 			return
 		}
 		if _, err = service.FindUserById(claims.ID); err != nil {
-			response.FailWithDetailed(http.StatusUnauthorized, err.Error(), gin.H{"reload": true}, c)
-			c.Abort()
+			response.FailWithDetailed(http.StatusUnauthorized, err.Error(), gin.H{"reload": true}, ctx)
+			ctx.Abort()
 		}
 		if claims.ExpiresAt-time.Now().Unix() < claims.BufferTime {
 			claims.ExpiresAt = time.Now().Unix() + global.CONFIG.JWT.ExpiresTime
 			newToken, _ := j.CreateToken(*claims)
 			newClaims, _ := j.ParseToken(newToken)
-			c.Header("new-token", newToken)
-			c.Header("new-expires-at", strconv.FormatInt(newClaims.ExpiresAt, 10))
+			ctx.Header("new-token", newToken)
+			ctx.Header("new-expires-at", strconv.FormatInt(newClaims.ExpiresAt, 10))
 		}
-		c.Set("claims", claims)
-		c.Next()
+		ctx.Set("claims", claims)
+		ctx.Set("userId", claims.ID)
+		ctx.Next()
 	}
 }
 
