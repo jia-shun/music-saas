@@ -24,7 +24,7 @@ func Login(ctx *gin.Context) {
 	}
 	U := model.User{Username: R.Username, Password: R.Password}
 	if user, err := service.Login(U); err != nil {
-		errMsg := "Login failed: The username does not exist or the password is incorrect"
+		errMsg := "登录失败: 用户名不存在或密码错误"
 		global.LOG.Error(errMsg)
 		response.FailWithDetailed(http.StatusBadRequest, errMsg, user, ctx)
 	} else {
@@ -33,13 +33,13 @@ func Login(ctx *gin.Context) {
 }
 
 func Logout(ctx *gin.Context) {
-	response.OkWithMessage("Logout success", ctx)
+	response.OkWithMessage("退出登录成功", ctx)
 }
 
 func GetInfo(ctx *gin.Context) {
 	if claims, exists := ctx.Get("claims"); !exists {
 		global.LOG.Error("get user id from context failed")
-		response.FailWithCode(http.StatusUnauthorized, "Get user info failed: unauthorized", ctx)
+		response.FailWithCode(http.StatusUnauthorized, "获取用户信息失败: 没有权限啊", ctx)
 	} else {
 		user := claims.(*request.CustomClaims)
 		userReturn, err := service.FindUserById(user.ID)
@@ -62,9 +62,9 @@ func Register(ctx *gin.Context) {
 	userReturn, err := service.Register(*u)
 	if err != nil {
 		global.LOG.Error("Register failed", zap.Any("err", err))
-		response.FailWithDetailed(http.StatusBadRequest, "Register failed: "+err.Error(), response.SysUserResponse{User: userReturn}, ctx)
+		response.FailWithDetailed(http.StatusBadRequest, "注册失败: "+err.Error(), response.SysUserResponse{User: userReturn}, ctx)
 	} else {
-		response.OkWithDetailed("Register success", response.SysUserResponse{User: userReturn}, ctx)
+		response.OkWithDetailed("注册成功", response.SysUserResponse{User: userReturn}, ctx)
 	}
 	return
 }
@@ -84,10 +84,10 @@ func issueToken(user model.User, ctx *gin.Context) {
 	token, err := j.CreateToken(claims)
 	if err != nil {
 		global.LOG.Error("Get token failed", zap.Any("err", err))
-		response.FailWithMessage("Get token failed", ctx)
+		response.FailWithMessage("获取Token失败", ctx)
 		return
 	}
-	response.OkWithDetailed("Login success", response.LoginResponse{
+	response.OkWithDetailed("登录成功", response.LoginResponse{
 		User:      user,
 		Token:     token,
 		ExpiresAt: claims.StandardClaims.ExpiresAt * 1000,

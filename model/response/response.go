@@ -13,7 +13,7 @@ type Response struct {
 
 func Result(code int, msg string, data interface{}, c *gin.Context) {
 	// 开始时间
-	c.JSON(code, Response{
+	c.JSON(http.StatusOK, Response{
 		code,
 		msg,
 		data,
