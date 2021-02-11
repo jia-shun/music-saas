@@ -13,11 +13,11 @@ func Routers() *gin.Engine {
 	Router.Use(middleware.Cors())
 	global.LOG.Info("use middleware cors")
 
-	PublicGroup := Router.Group("")
+	PublicGroup := Router.Group("saas")
 	{
 		router.InitBaseRouter(PublicGroup)
 	}
-	PrivateGroup := Router.Group("")
+	PrivateGroup := Router.Group("saas")
 	PrivateGroup.Use(middleware.JWTAuth())
 	{
 		router.InitUserRouter(PrivateGroup)

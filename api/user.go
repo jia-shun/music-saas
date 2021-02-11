@@ -66,7 +66,6 @@ func Register(ctx *gin.Context) {
 	} else {
 		response.OkWithDetailed("注册成功", response.SysUserResponse{User: userReturn}, ctx)
 	}
-	return
 }
 
 func issueToken(user model.User, ctx *gin.Context) {
