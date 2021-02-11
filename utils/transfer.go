@@ -14,6 +14,7 @@ func TransferToMusic(musicInfo transfer.MusicInfo) (music model.Music) {
 	music.FinishStatus = musicInfo.FinishStatus
 	music.UserID = musicInfo.UserID
 	music.Price = musicInfo.Price
+	music.PayStatus = musicInfo.PayStatus
 	beganAt, _ := time.Parse(timeLayoutStr, musicInfo.BeganAt)
 	music.BeganAt = beganAt
 	finishedAt, _ := time.Parse(timeLayoutStr, musicInfo.FinishedAt)
@@ -27,6 +28,7 @@ func TransferToMusicInfo(music model.Music) (musicInfo transfer.MusicInfo) {
 	musicInfo.MusicName = music.MusicName
 	musicInfo.CustomerName = music.CustomerName
 	musicInfo.Price = music.Price
+	musicInfo.PayStatus = music.PayStatus
 	musicInfo.UserID = music.UserID
 	musicInfo.BeganAt = music.BeganAt.Format(timeLayoutStr)
 	musicInfo.FinishedAt = music.FinishedAt.Format(timeLayoutStr)

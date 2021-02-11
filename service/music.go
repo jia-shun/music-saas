@@ -59,10 +59,11 @@ func UpdateMusic(music model.Music) (err error) {
 	oldMusic.MusicName = music.MusicName
 	oldMusic.CustomerName = music.CustomerName
 	oldMusic.Price = music.Price
+	oldMusic.PayStatus = music.PayStatus
 	return global.DB.Save(&oldMusic).Error
 }
 
-func UpdateMusicStatus(music model.Music) (err error) {
+func UpdateMusicFinishStatus(music model.Music) (err error) {
 	oldMusic, err := FindMusicById(music.ID)
 	if err != nil {
 		return err
@@ -74,6 +75,18 @@ func UpdateMusicStatus(music model.Music) (err error) {
 	if oldMusic.FinishStatus {
 		oldMusic.FinishedAt = time.Now()
 	}
+	return global.DB.Save(&oldMusic).Error
+}
+
+func UpdateMusicPayStatus(music model.Music) (err error) {
+	oldMusic, err := FindMusicById(music.ID)
+	if err != nil {
+		return err
+	}
+	if oldMusic.UserID != music.UserID {
+		return errors.New("没有权限修改这首音乐")
+	}
+	oldMusic.PayStatus = music.PayStatus
 	return global.DB.Save(&oldMusic).Error
 }
 

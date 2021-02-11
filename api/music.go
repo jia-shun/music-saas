@@ -113,7 +113,7 @@ func UpdateMusic(ctx *gin.Context) {
 	}
 }
 
-func UpdateMusicStatus(ctx *gin.Context) {
+func UpdateMusicFinishStatus(ctx *gin.Context) {
 	var musicInfo transfer.MusicInfo
 	_ = ctx.ShouldBindJSON(&musicInfo)
 	if err := utils.Verify(musicInfo, utils.IdVerify); err != nil {
@@ -128,9 +128,32 @@ func UpdateMusicStatus(ctx *gin.Context) {
 	}
 	musicInfo.UserID = userId.(uint)
 	var music = utils.TransferToMusic(musicInfo)
-	if err := service.UpdateMusicStatus(music); err != nil {
+	if err := service.UpdateMusicFinishStatus(music); err != nil {
 		global.LOG.Error("编辑音乐完成状态失败", zap.Any("err", err))
 		response.FailWithMessage("编辑音乐完成状态失败", ctx)
+	} else {
+		response.Ok(ctx)
+	}
+}
+
+func UpdateMusicPayStatus(ctx *gin.Context) {
+	var musicInfo transfer.MusicInfo
+	_ = ctx.ShouldBindJSON(&musicInfo)
+	if err := utils.Verify(musicInfo, utils.IdVerify); err != nil {
+		response.FailWithMessage(err.Error(), ctx)
+		return
+	}
+	userId, exists := ctx.Get("userId")
+	if !exists {
+		global.LOG.Error("get user id from context failed")
+		response.FailWithMessage("the user not exist", ctx)
+		return
+	}
+	musicInfo.UserID = userId.(uint)
+	var music = utils.TransferToMusic(musicInfo)
+	if err := service.UpdateMusicPayStatus(music); err != nil {
+		global.LOG.Error("编辑音乐完成状态失败", zap.Any("err", err))
+		response.FailWithMessage("编辑音乐支付状态失败", ctx)
 	} else {
 		response.Ok(ctx)
 	}
