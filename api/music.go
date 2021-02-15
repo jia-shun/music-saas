@@ -32,7 +32,7 @@ func GetMusic(ctx *gin.Context) {
 		response.FailWithMessage(err.Error(), ctx)
 		return
 	}
-	if list, total, err := service.GetMusicList(pageInfo.PageInfo, pageInfo.Keyword, pageInfo.OrderKey, pageInfo.Desc, userId.(uint)); err != nil {
+	if list, total, err := service.GetMusicList(pageInfo, userId.(uint)); err != nil {
 		global.LOG.Error("获取音乐列表失败", zap.Any("err", err))
 		response.FailWithMessage("获取音乐列表失败", ctx)
 	} else {

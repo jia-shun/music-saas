@@ -8,16 +8,37 @@ import (
 	"time"
 )
 
-func GetMusicList(info request.PageInfo, keyword string, order string, desc bool, userId uint) (list []model.Music, total int64, err error) {
+func GetMusicList(info request.SearchMusicParams, userId uint) (list []model.Music, total int64, err error) {
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
 	db := global.DB.Model(&model.Music{})
 	var musicList []model.Music
-
+	var keyword = info.Keyword
+	var payStatusStr = info.PayStatus
+	var finishStatusStr = info.FinishStatus
+	var order = info.OrderKey
+	var desc = info.Desc
+	db = db.Where("`user_id` = ?", userId)
 	if keyword != "" {
-		db = db.Where("`user_id` = ? AND (music_name LIKE ? OR customer_name LIKE ?)", userId, "%"+keyword+"%", "%"+keyword+"%")
-	} else {
-		db = db.Where("`user_id` = ?", userId)
+		db = db.Where("music_name LIKE ? OR customer_name LIKE ?", "%"+keyword+"%", "%"+keyword+"%")
+	}
+	if payStatusStr != "" {
+		var payStatus int
+		if "TRUE" == payStatusStr {
+			payStatus = 1
+		} else {
+			payStatus = 0
+		}
+		db = db.Where("pay_status = ?", payStatus)
+	}
+	if finishStatusStr != "" {
+		var finishStatus int
+		if "TRUE" == finishStatusStr {
+			finishStatus = 1
+		} else {
+			finishStatus = 0
+		}
+		db = db.Where("finish_status = ?", finishStatus)
 	}
 	err = db.Count(&total).Error
 	if err != nil {
