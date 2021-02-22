@@ -46,13 +46,17 @@ func GetMusicList(info request.SearchMusicParams, userId uint) (list []model.Mus
 	}
 	db = db.Limit(limit).Offset(offset)
 	if order != "" {
-		var OrderStr string
-		if desc {
-			OrderStr = order + " desc"
-		} else {
-			OrderStr = order
+		var orderStr string
+		if "beganAt" == order {
+			orderStr = "began_at"
 		}
-		err = db.Order(OrderStr).Find(&musicList).Error
+		if "finishedAt" == order {
+			orderStr = "finished_at"
+		}
+		if desc {
+			orderStr = orderStr + " desc"
+		}
+		err = db.Order(orderStr).Find(&musicList).Error
 	} else {
 		err = db.Order("updated_at desc").Find(&musicList).Error
 	}
