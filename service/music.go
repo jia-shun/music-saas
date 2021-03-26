@@ -58,7 +58,7 @@ func GetMusicList(info request.SearchMusicParams, userId uint) (list []model.Mus
 		}
 		err = db.Order(orderStr).Find(&musicList).Error
 	} else {
-		err = db.Order("updated_at desc").Find(&musicList).Error
+		err = db.Order("created_at desc").Find(&musicList).Error
 	}
 	return musicList, total, err
 }
