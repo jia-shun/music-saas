@@ -12,6 +12,7 @@ var weekday = [7]string{"星期天", "星期一", "星期二", "星期三", "星
 
 const timeLayoutStr = "2006-01-02"
 const timeParseStr = "2006-01-02T15:04:05.000Z"
+const timeParseShortStr = "2006-01-02T15:04:05Z"
 const timeLocalParseStr = "2006-01-02T15:04:05+08:00"
 
 func TransferToMusic(musicInfo transfer.MusicInfo) (music model.Music) {
@@ -41,12 +42,17 @@ func TransferToMusicInfo(music model.Music) (musicInfo transfer.MusicInfo) {
 }
 
 func transferStrToTime(fromTime string) time.Time {
-	if strings.HasSuffix(fromTime, "Z") {
+	if strings.HasSuffix(fromTime, "000Z") {
 		toTime, _ := time.Parse(timeParseStr, fromTime)
 		return toTime
+	} else if strings.HasSuffix(fromTime, "Z") {
+		toTime, _ := time.Parse(timeParseShortStr, fromTime)
+		return toTime
+	} else {
+		toTime, _ := time.Parse(timeLocalParseStr, fromTime)
+		return toTime
 	}
-	toTime, _ := time.Parse(timeLocalParseStr, fromTime)
-	return toTime
+
 }
 
 func timeToViewString(timeAt time.Time) string {
