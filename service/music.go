@@ -80,12 +80,8 @@ func UpdateMusic(music model.Music) (err error) {
 	if oldMusic.UserID != music.UserID {
 		return errors.New("没有权限修改这首音乐")
 	}
-	oldMusic.FinishStatus = music.FinishStatus
-	oldMusic.MusicName = music.MusicName
-	oldMusic.CustomerName = music.CustomerName
-	oldMusic.Price = music.Price
-	oldMusic.PayStatus = music.PayStatus
-	return global.DB.Save(&oldMusic).Error
+	music.CreatedAt = oldMusic.CreatedAt
+	return global.DB.Save(&music).Error
 }
 
 func UpdateMusicFinishStatus(music model.Music) (err error) {

@@ -12,6 +12,7 @@ var weekday = [7]string{"星期天", "星期一", "星期二", "星期三", "星
 
 const timeLayoutStr = "2006-01-02"
 const timeParseStr = "2006-01-02T15:04:05.000Z"
+const timeLocalParseStr = "2006-01-02T15:04:05+08:00"
 
 func TransferToMusic(musicInfo transfer.MusicInfo) (music model.Music) {
 	music.ID = musicInfo.ID
@@ -21,10 +22,8 @@ func TransferToMusic(musicInfo transfer.MusicInfo) (music model.Music) {
 	music.UserID = musicInfo.UserID
 	music.Price = musicInfo.Price
 	music.PayStatus = musicInfo.PayStatus
-	beganAt, _ := time.Parse(timeParseStr, musicInfo.BeganAt)
-	music.BeganAt = beganAt
-	finishedAt, _ := time.Parse(timeParseStr, musicInfo.FinishedAt)
-	music.FinishedAt = finishedAt
+	music.BeganAt = transferStrToTime(musicInfo.BeganAt)
+	music.FinishedAt = transferStrToTime(musicInfo.FinishedAt)
 	return music
 }
 
@@ -35,10 +34,19 @@ func TransferToMusicInfo(music model.Music) (musicInfo transfer.MusicInfo) {
 	musicInfo.Price = music.Price
 	musicInfo.PayStatus = music.PayStatus
 	musicInfo.UserID = music.UserID
-	musicInfo.BeganAt = timeToViewString(music.CreatedAt)
+	musicInfo.BeganAt = timeToViewString(music.BeganAt)
 	musicInfo.FinishedAt = timeToViewString(music.FinishedAt)
 	musicInfo.FinishStatus = music.FinishStatus
 	return musicInfo
+}
+
+func transferStrToTime(fromTime string) time.Time {
+	if strings.HasSuffix(fromTime, "Z") {
+		toTime, _ := time.Parse(timeParseStr, fromTime)
+		return toTime
+	}
+	toTime, _ := time.Parse(timeLocalParseStr, fromTime)
+	return toTime
 }
 
 func timeToViewString(timeAt time.Time) string {
@@ -66,7 +74,6 @@ func function2Week(timeStr string) string {
 		y = (year - 1) % 100
 		c = (year - 1) / 100
 	}
-
 	week := y + (y / 4) + (c / 4) - 2*c + ((26 * (m + 1)) / 10) + day - 1
 	if week < 0 {
 		week = 7 - (-week)%7
