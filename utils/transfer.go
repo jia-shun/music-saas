@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-var weekday = [7]string{"周日", "周一", "周二", "周三", "周四", "周五", "周六"}
+var weekday = [7]string{"星期天", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"}
 
 const timeLayoutStr = "2006-01-02"
 const timeParseStr = "2006-01-02T15:04:05.000Z"
