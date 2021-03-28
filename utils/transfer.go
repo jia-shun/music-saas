@@ -56,7 +56,7 @@ func transferStrToTime(fromTime string) time.Time {
 }
 
 func timeToViewString(timeAt time.Time) string {
-	timeAtDay := timeAt.Format(timeLayoutStr)
+	timeAtDay := timeAt.UTC().Format(timeLayoutStr)
 	timeAtWeek := function2Week(timeAtDay)
 	return strings.Join([]string{timeAtDay, timeAtWeek}, "-")
 }
